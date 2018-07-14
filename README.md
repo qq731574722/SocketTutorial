@@ -1,14 +1,14 @@
-#在C++中使用Windows TCP Sockets
+﻿# 在C++中使用Windows TCP Sockets
 
 [Programming Windows TCP Sockets in C++ for the Beginner](https://www.codeproject.com/Articles/13071/Programming-Windows-TCP-Sockets-in-C-for-the-Begin)
 
-##介绍
+## 介绍
 
 开始之前，我们需要include winsock.h，并链接libws2_32.a到项目中，才可以使用TCP/IP必须的API。如果无法做到这一点，请使用在运行时`LoadLibrary()`加载ws2_32.dll或类似的方法
 
 本文中的所有代码都是使用“Bloodshed Dev-C ++ 4.9.8.0”编写和测试的; 但一般来说，它应该适用于任何编译器，只需要很少的修改
 
-##线程、端口、Socket
+## 线程、端口、Socket
 
 “线程”是你的计算机与远端计算机之间连接的标识名称，一个线程仅连接到一个套接字
 
@@ -54,7 +54,7 @@ DECLARE_STDCALL_P(struct hostent *) gethostbyname(const char*);
 unsigned long PASCAL inet_addr(const char*);
 ```
 
-##字节顺序
+## 字节顺序
 
 因为Intel的计算机和网络协议使用相反的字节顺序，我们必须在发送请求之前将将每个端口和IP地址转换为网络协议的字节顺序，否则会引起混乱。如果不做反转，端口25最终不会变为端口25。所以当我们与服务器通信时，必须保证我们与服务器使用相同的语言
 
@@ -72,7 +72,7 @@ u_short PASCAL ntohs(u_short); //网络->主机 short
 
 举例来说，当我们指定我们要监听或连接的端口时，我们必须使用`htons()`函数将数字转换为网络字节顺序。当然，如果使用`inet_addr()`函数将字符串类型的IP地址转换成IP地址，那么获得的这个IP地址就是已经正确的网络字节顺序，就不需要使用`htonl()`函数了
 
-##开启Winsock
+## 开启Winsock
 
 使用Windows套接字的第一步是启用Winsock API，Winsock有两个版本,第二版是最新版，也是我们希望指定的版本
 
@@ -103,7 +103,7 @@ typedef WSADATA *LPWSADATA;
 
 我们只需要调用这两个函数，初始化Winsock时调用`WSAStartup()`，任务完成时调用`WSACleanup()`，但是在任务完成之前不要关闭Winsock，因为这样会取消程序的所有连接和正在监听的端口.
 
-##初始化Socket
+## 初始化Socket
 
 要填写正确的参数传递给开启Socket的函数，函数返回这个套接字的句柄。这个句柄非常方便,我们可以通过它随时操作套接字的活动
 
@@ -133,7 +133,7 @@ int PASCAL closesocket(SOCKET);
 socket(AF_INET,SOCK_STREAM,IPPROTO_TCP)
 ```
 
-##连接远程主机 - 作为客户端
+## 连接远程主机 - 作为客户端
 
 接下来尝试一下可以连接到远程计算机的简单程序。
 
@@ -221,7 +221,7 @@ void CloseConnection()
 
 ```
 
-##接收连接 - 作为服务器
+## 接收连接 - 作为服务器
 
 体验完连接至目的主机后，现在来扮演服务器的角色。为了所有远端计算机都可以连接到你，我们需要“监听”端口以等待连接请求。常用的API如下：
 
@@ -309,7 +309,7 @@ bool ListenOnPort(int portno)
 如果你编译允许这段代码，就像前面说的，你的程序将冻结，直到发出连接请求。你可以通过尝试"telnent"连接来引发此连接请求，当然，连接将不可避免地失败，因为我们连接没有被accept()，但是因为`listen()`返回了，所以程序复活。你可以在终端键入`telnet 127.0.0.0 端口号`来发送请求
 
 
-##异步Socket
+## 异步Socket
 
 使用`listen()`这样的阻塞函数实在太蠢了，来看看“异步Socket”是如何工作的
 
@@ -422,7 +422,7 @@ PS C:\Users\73157> netstat -an
 
 不用担心，大家都需要多次尝试才会成功，多试几次，你也可以的。（当然，如果你试了几周都没成功，那就把这个教程烧了，忘记是谁写的!）
 
-##发送数据与接受数据
+## 发送数据与接受数据
 
 到这一步，你所有的所有服务器都是聋哑的,这肯定不是你想要的结果。所以，来看看如何与其他计算机进行有效的沟通。和往常一样，这几个API调用解决了问题：
 
@@ -476,7 +476,7 @@ send(s, szpText, len_of_text, 0);
 
 这两个API允许您与任何一台远程计算机进行通信，而不用管其他连接。这些进阶函数中有一个额外的参数，用于接收指向`sockaddr_in`结构体类型的指针，你可以使用这个参数指定要远程计算机的IP地址与其通信。如果你要构建一个完整的聊天程序或是类似的东西，这是个重要的技巧。但是，除了帮你了解这些功能的基本概念以外，我还会让你自己解决这些问题。（你不觉得这话从作者口中说出来很讨厌吗？通常我们自己无迹可寻。。。但如果你真的决定要做的话，也不会让你花费太多时间。）
 
-##后记
+## 后记
 
 到现在，你应该对Windows Socket有一个很好的理解（或是深仇大恨），但无论如何，如果你想找一个更好的解释，请看看这个本文提供的源码。比起理论，实践能让你学到更多
 
@@ -484,6 +484,6 @@ send(s, szpText, len_of_text, 0);
 
 希望你有所收获，发布评论让我知道你对本文的看法
 
-##许可协议
+## 许可协议
 
 本文及其附带源码和文件遵循[ 署名-相同方式共享 2.5 通用 ](https://creativecommons.org/licenses/by-sa/2.5/)许可
